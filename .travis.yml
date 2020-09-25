@@ -1,0 +1,20 @@
+language: generic
+sudo: required
+services:
+    docker
+before_install:
+    - docker build -t aloksabran/react-test -f ./client/Dockerfile.dev ./client
+script:
+    - docker run -e CI=true aloksabran/react-test npm run test
+after_succes:
+    - docker build -t aloksabran/multi-client ./client
+    - docker build -t aloksabran/multi-nginx ./nginx
+    - docker build -t aloksabran/multi-server ./server
+    - docker build -t aloksabran/multi-worker ./worker
+    #Log in to Docker Hub
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    #Once all images are built, Push to Docker Hub
+    - docker push aloksabran/multi-client
+    - docker push aloksabran/multi-nginx
+    - docker push aloksabran/multi-server
+    - docker push aloksabran/multi-worker
