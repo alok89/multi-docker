@@ -1,3 +1,4 @@
+#CI -> Continuous Integration
 language: generic
 #sudo: required
 services: docker
@@ -5,6 +6,7 @@ services: docker
 before_install:
   - docker build -t aloksabran/react-test -f ./client/Dockerfile.dev ./client
 
+#CT -> Continuous Testing
 script:
   - docker run -e CI=true aloksabran/react-test npm run test
 
@@ -21,6 +23,7 @@ after_success:
   - docker push aloksabran/multi-server
   - docker push aloksabran/multi-worker
 
+#CD -> Continuous Deployment
 deploy:
   provider: elasticbeanstalk
   region: us-east-1
